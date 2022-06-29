@@ -1,2 +1,2 @@
 # go_utils
-go utils
+*go utils*
