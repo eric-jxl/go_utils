@@ -19,3 +19,25 @@ func GetFileContentType(out *os.File) (string, error) {
 
 	return contentType, nil
 }
+
+type FileSet struct {
+	Name    string
+	Size    int64
+	Dir     bool
+	Mode    interface{}
+	ModTime interface{}
+}
+
+func GetFileInfo(filepath string) (*FileSet, error) {
+	file, err := os.Stat(filepath)
+	if err != nil {
+		return nil, err
+	}
+	return &FileSet{
+		Name:    file.Name(),
+		Size:    file.Size(),
+		Dir:     file.IsDir(),
+		Mode:    file.Mode(),
+		ModTime: file.ModTime(),
+	}, nil
+}
