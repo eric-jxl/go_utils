@@ -19,6 +19,13 @@ func GetFileContentType(out *os.File) (string, error) {
 
 	return contentType, nil
 }
+type File struct{}
+
+type FileInfer interface {
+	GetFileInfo(string) (*FileSet, error)
+	FileSize(filepath string) int64  //获取文件大小
+	FileName(filepath string) string //获取文件名称
+}
 
 type FileSet struct {
 	Name    string
@@ -28,7 +35,7 @@ type FileSet struct {
 	ModTime interface{}
 }
 
-func GetFileInfo(filepath string) (*FileSet, error) {
+func (f *File) GetFileInfo(filepath string) (*FileSet, error) {
 	file, err := os.Stat(filepath)
 	if err != nil {
 		return nil, err
@@ -40,4 +47,14 @@ func GetFileInfo(filepath string) (*FileSet, error) {
 		Mode:    file.Mode(),
 		ModTime: file.ModTime(),
 	}, nil
+}
+
+func (f *File) FileSize(filepath string) int64 {
+	file, _ := f.GetFileInfo(filepath)
+	return file.Size
+}
+
+func (f *File) FileName(filepath string) string {
+	file, _ := f.GetFileInfo(filepath)
+	return file.Name
 }
